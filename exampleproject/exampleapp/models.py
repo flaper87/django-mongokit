@@ -1,5 +1,4 @@
 import datetime
-from django_mongokit import connection
 from django_mongokit.document import DjangoDocument
 
 # Create your models here.
@@ -16,4 +15,4 @@ class Talk(DjangoDocument):
     
     use_dot_notation = True
     
-connection.register([Talk])    
+DjangoDocument.connection.register([Talk])    

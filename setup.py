@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Copyright (c) 2010 Peter Bengtsson, peter@fry-it.com
-from distutils.core import setup
+from setuptools import setup
 
 setup(name='django-mongokit',
       version=open('django_mongokit/version.txt').read(),

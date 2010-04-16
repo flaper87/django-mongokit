@@ -162,4 +162,7 @@ Right now, DocumentForms support the following mongokit datatypes: `int`, `bool`
 
 DocumentForms do not at the moment support mongokit validations.
 
-	
+FlaPer87 Fork:
+* I added some querysets and django styles... 
+* Patience, It needs to be improved a lot....
+* See the modified exampleapp, docs are coming

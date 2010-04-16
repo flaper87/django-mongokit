@@ -47,8 +47,7 @@ class ExampleTest(TestCase):
         
     def test_creating_talk_basic(self):
         """test to create a Talk instance"""
-        collection = get_database()[Talk.collection_name]
-        talk = collection.Talk()
+        talk = Talk()
         talk.topic = u"Bla"
         talk.when = datetime.datetime.now()
         talk.tags = [u"foo", u"bar"]
@@ -85,8 +84,7 @@ class ExampleTest(TestCase):
         self.assertTrue('31 December 2010' in response.content)
         self.assertTrue('Tags: foo, bar' in response.content)
         
-        collection = get_database()[Talk.collection_name]
-        talk = collection.Talk.one()
+        talk = Talk.objects.one()
         assert talk.topic == u"My Topic"
         delete_url = reverse('delete_talk', args=[str(talk._id)])
         response = self.client.get(delete_url)

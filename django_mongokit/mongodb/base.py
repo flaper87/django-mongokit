@@ -3,6 +3,7 @@ MongoKit (MongoDB) backend for Django.
 """
 
 from mongokit import Connection
+from mongokit.document import DocumentProperties, CallableMixin
 
 from django.core.exceptions import ImproperlyConfigured
 from django.db.backends import *
@@ -157,7 +158,8 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         self.settings_dict = settings_dict
         self.alias = alias and alias or settings_dict['DATABASE_NAME']
         
-        self.connection = ConnectionWrapper()
+        self.connection = ConnectionWrapper(host=self.settings_dict["HOST"],
+                                            port=int(self.settings_dict["PORT"]))
  
 # Experimenting with commenting this out
 #    def _cursor(self):
@@ -178,3 +180,29 @@ class ConnectionWrapper(Connection):
         
     def __repr__(self):
         return 'ConnectionWrapper: ' + super(ConnectionWrapper, self).__repr__()
+    
+    def register(self, obj_list):
+        """
+        Django wants __module__ attr so we had to overwrite this method.
+        """
+        for obj in obj_list:
+            # we'll set obj as mmanager model If there's one and its model is None
+#            if not hasattr(obj, "mmanager"):
+#                obj.mmanager = MongoManager()
+#                obj.mmanager.model = obj
+                 
+#            if hasattr(obj, "objects") and not isinstance(getattr(obj, "objects"), MongoManager):
+#                setattr(obj, "dobjects", getattr(obj, "objects"))
+            if hasattr(obj, "objects"):
+                if callable(obj.objects):
+                    obj.objects = obj.objects()
+                if not obj.objects.model:
+                    obj.objects.model = obj
+
+            #We don't want descriptors_validation
+            if not obj.skip_validation:
+                obj()._validate_descriptors()
+            CallableDocument = type(
+              "Callable%s" % obj.__name__,
+              (obj, CallableMixin), {"_obj_class":obj, "__repr__":obj.__repr__, "__module__":obj.__module__})
+            self._registered_documents[obj.collection_name] = CallableDocument
