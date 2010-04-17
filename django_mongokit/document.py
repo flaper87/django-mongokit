@@ -27,7 +27,7 @@ class _Meta(object):
         self.module_name = module_name
         self.app_label = app_label
         self.pk = _PK() # needed for haystack
-                     
+
         #all_verbose_names.append(verbose_name)
         model_names.append((model_name, self.verbose_name))
 

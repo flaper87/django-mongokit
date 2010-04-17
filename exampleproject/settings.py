@@ -96,6 +96,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'exampleapp',
     'exampleapp_sql',
+    'benchmarker',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
 )

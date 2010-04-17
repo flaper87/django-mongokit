@@ -92,10 +92,8 @@ def __random_duration():
     
 def _create_talks(how_many):
     # 1 Create 1,000 talks
-    collection = get_database()[Talk.collection_name]
-    ids = set()
     for i in range(how_many):
-        talk = collection.Talk()
+        talk = Talk()
         talk.topic = __random_topic()
         talk.when = __random_when()
         talk.tags = __random_tags()
@@ -105,17 +103,14 @@ def _create_talks(how_many):
     return ids
 
 def _edit_talks(ids):
-    collection = get_database()[Talk.collection_name]
     for id_ in ids:
-        talk = collection.Talk.one({'_id': ObjectId(id_)})
+        talk = Talk.objects.get(id=id_)
         talk.topic += "extra"
         talk.save()
 
 def _delete_talks(ids):
-    collection = get_database()[Talk.collection_name]
     for id_ in ids:
-        talk = collection.Talk.one({'_id': ObjectId(id_)})
-        talk.delete()
+        Talk.object.delete(id = id_)
         
     
 
