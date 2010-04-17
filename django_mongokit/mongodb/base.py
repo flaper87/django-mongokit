@@ -10,6 +10,8 @@ from django.db.backends import *
 from django.db.backends.creation import BaseDatabaseCreation
 from django.conf import settings
 
+from django_mongokit.errors import *
+
 class UnsupportedConnectionOperation(Exception):
     pass
 
@@ -19,12 +21,6 @@ def complain(*args, **kwargs):
     raise UnsupportedConnectionOperation("ARGS=%s" % unicode(args))
 
 def ignore(*args, **kwargs):
-    pass
-
-class DatabaseError(Exception):
-    pass
-
-class IntegrityError(DatabaseError):
     pass
 
 class DatabaseOperations(BaseDatabaseOperations):
@@ -159,7 +155,8 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         self.alias = alias and alias or settings_dict['DATABASE_NAME']
         
         self.connection = ConnectionWrapper(host=self.settings_dict["HOST"],
-                                            port=int(self.settings_dict["PORT"]))
+                                            port=int(self.settings_dict["PORT"]
+or 27017))
  
 # Experimenting with commenting this out
 #    def _cursor(self):

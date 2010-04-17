@@ -200,11 +200,10 @@ class BaseDocumentForm(BaseForm):
 
         opts = self._meta
         if instance is None:
-            # if we didn't get an instance, instantiate a new one
+#             if we didn't get an instance, instantiate a new one
 #            if collection is None:
 #                raise TypeError("Collection must be supplied for an unbound "
 #                        "DocumentForm")
-#            self.instance = opts.document(collection=collection)
             self.instance = opts.document()
             object_data = {}
         else:

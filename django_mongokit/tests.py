@@ -1,22 +1,29 @@
 import os
+os.environ["DJANGO_SETTINGS_MODULE"] = "test_settings"
 import unittest
 from document import DjangoDocument
 
 class Talk(DjangoDocument):
+    collection_name = "talk"
     structure = {'topic': unicode}
     
 class CrazyOne(DjangoDocument):
+    collection_name = "crazy_one"
+    
     class Meta:
         verbose_name = u"Crazy One"
     structure = {'name': unicode}
         
 class CrazyTwo(DjangoDocument):
+    collection_name = "crazy_two"
+    
     class Meta:
         verbose_name = u"Crazy Two"
         verbose_name_plural = u"Crazies Two"
     structure = {'names': unicode}
         
 class LighteningTalk(Talk):
+    collection_name = "crazy_lighteningtalk"
     structure = {'has_slides': bool}
     default_values = {'has_slides': True}
     
@@ -74,8 +81,7 @@ class DocumentTest(unittest.TestCase):
         
     def test_pk_shortcut(self):
         # create an instance an expect to get the ID as a string
-        collection = self.database.talks
-        talk = collection.Talk()
+        talk = Talk()
         self.assertRaises(KeyError, lambda t:t.pk, talk)
         talk['topic'] = u"Something"
         talk.save()
@@ -128,8 +134,7 @@ class DocumentTest(unittest.TestCase):
         signals.pre_save.connect(trigger_pre_save, sender=LighteningTalk)
         signals.post_save.connect(trigger_post_save, sender=LighteningTalk)
 
-        collection = self.database.talks
-        talk = collection.LighteningTalk()
+        talk = LighteningTalk()
         
         talk['topic'] = u"Bla"
         talk.save()
@@ -210,7 +215,9 @@ class MongoDBBaseTestCase(unittest.TestCase):
         self.assertTrue('test_' in test_database_name)
         
         from mongokit import Connection
-        con = Connection()
+        host = settings.DATABASES['mongodb']['HOST']
+        port = int(settings.DATABASES['mongodb']['PORT'] or 27017)
+        con = Connection(host=host, port=port)
         # the test database isn't created till it's needed
         self.assertTrue(test_database_name not in con.database_names())
         
@@ -264,7 +271,9 @@ class MongoDBBaseTestCase(unittest.TestCase):
         self.assertTrue('test_' in test_database_name)
         
         from mongokit import Connection
-        con = Connection()
+        host = settings.DATABASES['mongodb']['HOST']
+        port = int(settings.DATABASES['mongodb']['PORT'] or 27017)
+        con = Connection(host=host, port=port)
         # the test database isn't created till it's needed
         self.assertTrue(test_database_name not in con.database_names())
         
@@ -292,6 +301,8 @@ class DetailedTalk(DjangoDocument):
     """
 A detailed talk document for testing automated form creation.
 """
+    collection_name = "detailed_talk"
+    
     structure = {
         'created_on': datetime.datetime,
         'topic': unicode,
@@ -383,7 +394,7 @@ class BasicDocumentFormTest(unittest.TestCase):
 
         self.assertEquals(posted_form.is_valid(), False)
         self.assertEquals(posted_form.errors['tags'], 
-                [u'Expecting object: line 1 column 25 (char 25)'])
+                          [u'Expecting , delimiter: line 1 column 27 (char 27)'])
 
     def test_submit_empty_form(self):
         "Test submitting an empty basic form shows proper errors."

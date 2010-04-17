@@ -1,7 +1,7 @@
 
 import re
 from mongokit import ObjectId
-from exceptions import DatabaseError
+from errors import DatabaseError
 
 class QuerySet(object):
     def __init__(self, cursor=None, cls=None, spec={}):

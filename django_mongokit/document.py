@@ -73,17 +73,17 @@ class DjangoDocumentManager(object):
     model = None
     
     def using_col(self, col):
-        if isinstance(col, basestring):
-            self.model.collection_name = col
-        else:
+        if not isinstance(col, basestring):
             raise AttributeError("col must be instance of basestring")
+
+        self.model.collection_name = col
         return self
     
     def change_db(self, db):
         if isinstance(db, basestring):
-            self.model.db_name = db
-        else:
             raise AttributeError("db must be instance of basestring")
+
+        self.model.db_name = db
         return self
     
     def _to_mongo(self, kwargs):
@@ -216,7 +216,11 @@ class DjangoDocument(Document):
     __metaclass__ = DjangoDocumentMetaClass
 
     objects = DjangoDocumentManager
-    
+   
+    def __init__(self, *args, **kwargs):
+        super(DjangoDocument, self).__init__(*args, **kwargs)
+        self.__collection = kwargs.pop("collection", None)
+ 
     ## XX Are these needed?
     def _get_pk_val(self, meta=None):
         if not meta:
@@ -233,7 +237,7 @@ class DjangoDocument(Document):
         Nothing useful for now.
         """
         if key in "collection" and self.__dict__.get(key) is None:
-            return self.get_collection()
+            return self.__collection or self.get_collection()
         if key in "db" and self.__dict__.get(key) is None:
             return self.get_database()
         if key in "connection" and self.__dict__.get(key) is None:
