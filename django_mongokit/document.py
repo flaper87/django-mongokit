@@ -188,11 +188,11 @@ class DjangoDocumentManager(object):
         return (obj, created)
     
 class DjangoDocument(Document):
-    use_dot_notation = True
     use_autorefs = True
+    skip_validation = True
+    use_dot_notation = True
     structure = {}
     
-    skip_validation = True
     
     #Collection attrs
     collection_name=None
