@@ -105,7 +105,6 @@ class DjangoDocumentManager(object):
             rst[key] = value
         return rst
 
-#    @NormalizeId()            
     def find(self, **kwargs):
         return QuerySet(cursor=None, cls=self.model, spec=self._to_mongo(kwargs))
 
@@ -124,7 +123,6 @@ class DjangoDocumentManager(object):
     def values_list(self, *args, **kwargs):
         return self.find().values_list(*args, **kwargs)
 
-#    @NormalizeId()
     def one(self, **kwargs):
         doc_cursor  = QuerySet(cursor=None, cls=self.model, spec=self._to_mongo(kwargs))
         count = doc_cursor.count()
@@ -166,7 +164,6 @@ class DjangoDocumentManager(object):
         else:
             self.model.get_collection().remove(kwargs)
 
-#    @NormalizeId()
     def get_or_create(self, *args, **kwargs):
         defaults = kwargs.pop("defaults", {})
         
