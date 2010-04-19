@@ -1,9 +1,7 @@
 import inspect
 import re
-
-from south.db import generic
     
-class DatabaseOperations(generic.DatabaseOperations):
+class DatabaseOperations(object):
     """
     MongoDB implementation of database operations.
     """
@@ -12,6 +10,9 @@ class DatabaseOperations(generic.DatabaseOperations):
 
     supports_foreign_keys = False
     has_check_constraints = False
+    
+    def __init__(self, db_alias):
+        pass
 
     def add_column(self, table_name, name, field, *args, **kwds):
         pass
