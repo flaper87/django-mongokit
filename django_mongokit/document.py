@@ -192,7 +192,7 @@ class DjangoDocument(Document):
     use_autorefs = True
     structure = {}
     
-    skip_validation = False
+    skip_validation = True
     
     #Collection attrs
     collection_name=None
