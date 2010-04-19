@@ -80,7 +80,7 @@ class DjangoDocumentManager(object):
         return self
     
     def change_db(self, db):
-        if isinstance(db, basestring):
+        if not isinstance(db, basestring):
             raise AttributeError("db must be instance of basestring")
 
         self.model.db_name = db
