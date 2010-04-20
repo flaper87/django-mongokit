@@ -1,5 +1,5 @@
-
 import re
+import pymongo
 from mongokit import ObjectId
 from errors import DatabaseError
 
@@ -8,7 +8,7 @@ class QuerySet(object):
         self._cursor = cursor
         self._collection = cls.get_collection()
         self._db = self._collection.database
-        self._class_object = cls        
+        self._class_object = cls
         self._spec_cache = {}
         self._spec = {}
         
@@ -18,9 +18,8 @@ class QuerySet(object):
         self._filter(spec)
         
     def _get_query_spec(self, parameters):
-        """ 
-        Convert django.db.models.sql.where.WhereNode tree 
-        to query dict for MongoDB "find" collection method.
+        """
+        Converts parameters to mongodb queries. 
         """
         spec = {}
         for key in parameters:
@@ -142,7 +141,7 @@ class QuerySet(object):
         return self.__class__(self._cursor.clone(), self._class_object, spec=self._spec)
     
     def values(self, *args):
-        return (args and [dict(zip(args,[doc[key if not key in ["id", "pk"] else "_id"] for key in args])) for doc in self]) or [obj for obj in self._cursor.clone()] 
+        return (args and [dict(zip(args,[doc[key if not key in ["id", "pk"] else "_id"] for key in args])) for doc in self]) or [obj for obj in self._cursor.clone()]
         
     def values_list(self, *args, **kwargs):
         flat = kwargs.pop("flat", False)
@@ -165,3 +164,55 @@ class QuerySet(object):
     def _load_data(self):
         if self._spec != self._spec_cache or self._spec == {} or self._fields != self._fields_cache:
             self._cursor = self._collection.find(*[self._spec])
+   
+    #Taken from mongoengine
+    def exec_js(self, code, *fields, **options):
+        scope = {
+            'collection': self._collection.name,
+            'options': options or {},
+        }
+
+        query = self._spec
+        #if self._where_clause:
+            #query['$where'] = self._where_clause
+
+        scope['query'] = query
+        code = pymongo.code.Code(code, scope=scope)
+
+        db = self._collection.database
+        return db.eval(code, *fields)
+
+    #Taken from mongoengine
+    def average(self, field):
+        average_func = """
+            function(field) {
+                var total = 0.0;
+                var num = 0;
+                db[collection].find(query).forEach(function(doc) {
+                    if (doc[field]) {
+                        total += doc[field];
+                        num += 1;
+                    }
+                });
+                return total / num;
+            }
+        """
+        return self.exec_js(average_func, field)
+
+    #Taken from mongoengine
+    def sum(self, field):
+        """Sum over the values of the specified field.
+
+        :param field: the field to sum over; use dot-notation to refer to
+            embedded document fields
+        """
+        sum_func = """
+            function(sumField) {
+                var total = 0.0;
+                db[collection].find(query).forEach(function(doc) {
+                    total += (doc[sumField] || 0.0);
+                });
+                return total;
+            }
+        """
+        return self.exec_js(sum_func, field)
