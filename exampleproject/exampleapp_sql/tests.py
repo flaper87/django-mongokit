@@ -5,11 +5,12 @@ from django.db import connections
 from django.conf import settings
 
 from models import Talk
+from django_mongokit.shortcut import DATABASE_CONF
 
 class ExampleTest(TestCase):
     def setUp(self):
-        self.connection = connections['mongokit'].connection
-        self.database = self.connection[settings.DATABASES['mongokit']['NAME']]
+        self.connection = connections[DATABASE_CONF].connection
+        self.database = self.connection[settings.DATABASES[DATABASE_CONF]['NAME']]
         
     def tearDown(self):
         for name in self.database.collection_names():

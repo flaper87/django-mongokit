@@ -18,7 +18,7 @@ class ExampleTest(TestCase):
         if not __django_12__:
             # Ugly but necessary
             from django.db import load_backend
-            backend = load_backend('django_mongokit.mongokit')
+            backend = load_backend('django_mongokit.mongodbkit')
             self.connection = backend.DatabaseWrapper({
                 'DATABASE_HOST': getattr(settings, 'MONGO_DATABASE_HOST', None),
                 'DATABASE_NAME': settings.MONGO_DATABASE_NAME,

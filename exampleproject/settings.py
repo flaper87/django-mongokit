@@ -21,8 +21,8 @@ DATABASES = {
         'ENGINE': 'sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'example-sqlite3.db',    # Or path to database file if using sqlite3.
     },             
-    'mongokit': {
-        'ENGINE': 'django_mongokit.mongokit', 
+    'mongodbkit': {
+        'ENGINE': 'django_mongokit.mongodbkit', 
         'NAME': 'example', 
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.

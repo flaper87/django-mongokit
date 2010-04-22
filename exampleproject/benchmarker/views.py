@@ -15,12 +15,13 @@ from exampleapp.models import Talk
 from exampleapp_sql.models import Talk as sql_Talk
 
 from django_mongokit import get_database
+from django_mongokit.shortcut import DATABASE_CONF
 
 def run(request):
     how_many = int(request.GET.get('how_many', 1))
     
     TESTS = (('mongokit', _create_talks, _edit_talks, _delete_talks, 
-              settings.DATABASES['mongokit']['ENGINE']),
+              settings.DATABASES[DATABASE_CONF]['ENGINE']),
              ('sql', _create_talks_sql, _edit_talks_sql, _delete_talks_sql, 
               settings.DATABASES['default']['ENGINE']),
              )
