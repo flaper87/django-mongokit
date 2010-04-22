@@ -1,16 +1,22 @@
 from django.conf import settings
+
+DATABASE_CONF = None
+
 try:
     from django.db import connections
     from django.db.utils import ConnectionDoesNotExist
 
     __django_12__ = True
+    DATABASE_CONF = [ name for name, opts in settings.DATABASES.items() if opts["ENGINE"] == "django_mongokit.mongodbkit"][0]
 except ImportError:
     __django_12__ = False
+except IndexError:
+    raise RuntimeError("A mongodbkit database must be set")
+    
 
-
-if __django_12__:    
+if __django_12__: 
     try:
-        connection = connections['mongodb'].connection
+        connection = connections[DATABASE_CONF].connection
     except ConnectionDoesNotExist:
         # Need to raise a better error
         print connections.databases
@@ -21,7 +27,7 @@ else:
     # Since with Django <1.2 we have to first define a normal backend engine
     # like sqlite so then the base backend for mongodb is never called
     from django.db import load_backend
-    backend = load_backend('django_mongokit.mongodb')
+    backend = load_backend('django_mongokit.mongodbkit')
     connection = backend.DatabaseWrapper({
         'DATABASE_HOST': getattr(settings, 'MONGO_DATABASE_HOST', None),
         'DATABASE_NAME': settings.MONGO_DATABASE_NAME,
@@ -44,7 +50,7 @@ else:
 # differently as long as you use get_database()
 def get_database(this_connection=connection):
     if __django_12__:
-        return this_connection[settings.DATABASES['mongodb']['NAME']]
+        return this_connection[settings.DATABASES[DATABASE_CONF]['NAME']]
     else:
         return this_connection[settings.MONGO_DATABASE_NAME]
 

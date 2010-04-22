@@ -84,7 +84,8 @@ class DatabaseCreation(BaseDatabaseCreation):
         # connections, databases and collections. It will appear the same as
         # when working with non-test code.
         try:
-            settings.DATABASES['mongodb']['NAME'] = test_database_name
+            from shortcut import DATABASE_CONF
+            settings.DATABASES[DATABASE_CONF]['NAME'] = test_database_name
         except AttributeError:
             settings.MONGO_DATABASE_NAME = test_database_name
             
@@ -111,7 +112,8 @@ class DatabaseCreation(BaseDatabaseCreation):
         self._drop_database(test_database_name)
         
         try:
-            settings.DATABASES['mongodb']['NAME'] = old_database_name
+            from shortcut import DATABASE_CONF
+            settings.DATABASES[DATABASE_CONF]['NAME'] = old_database_name
         except AttributeError:
             # Django <1.2
             settings.MONGO_DATABASE_NAME = old_database_name

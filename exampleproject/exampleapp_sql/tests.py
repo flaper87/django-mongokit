@@ -8,8 +8,8 @@ from models import Talk
 
 class ExampleTest(TestCase):
     def setUp(self):
-        self.connection = connections['mongodb'].connection
-        self.database = self.connection[settings.DATABASES['mongodb']['NAME']]
+        self.connection = connections['mongokit'].connection
+        self.database = self.connection[settings.DATABASES['mongokit']['NAME']]
         
     def tearDown(self):
         for name in self.database.collection_names():

@@ -20,7 +20,7 @@ def run(request):
     how_many = int(request.GET.get('how_many', 1))
     
     TESTS = (('mongokit', _create_talks, _edit_talks, _delete_talks, 
-              settings.DATABASES['mongodb']['ENGINE']),
+              settings.DATABASES['mongokit']['ENGINE']),
              ('sql', _create_talks_sql, _edit_talks_sql, _delete_talks_sql, 
               settings.DATABASES['default']['ENGINE']),
              )

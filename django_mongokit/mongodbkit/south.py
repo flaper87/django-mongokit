@@ -6,7 +6,7 @@ class DatabaseOperations(object):
     MongoDB implementation of database operations.
     """
     
-    backend_name = "mongodb"
+    backend_name = "mongodbkit"
 
     supports_foreign_keys = False
     has_check_constraints = False
@@ -36,4 +36,7 @@ class DatabaseOperations(object):
         pass
     
     def delete_table(self, table_name, cascade=True):
+        pass
+    
+    def connection_init(self):
         pass

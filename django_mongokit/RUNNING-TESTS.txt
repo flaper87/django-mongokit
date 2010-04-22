@@ -12,7 +12,7 @@ To run with coverage and reporting simple set the
 DJANGO_SETTINGS_MODULE and then run it like this:
 
         coverage run tests.py
-	coverage report __init__.py document.py mongodb/__init__.py shortcut.py mongodb/base.py
+	coverage report __init__.py document.py mongodbkit/__init__.py shortcut.py mongodbkit/base.py
 	coverage html
 	firefox htmlcov/index.html
 

@@ -21,8 +21,8 @@ DATABASES = {
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     },             
-    'mongodb': {
-        'ENGINE': 'django_mongokit.mongodb', 
+    'mongodbkit': {
+        'ENGINE': 'django_mongokit.mongodbkit', 
         'NAME': 'example', 
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.

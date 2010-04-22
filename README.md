@@ -30,14 +30,14 @@ into your `settings.DATABASES` directive. Here's an example:
                 'ENGINE': 'sqlite3', 
                 'NAME': 'example-sqlite3.db',
             },
-            'mongodb': {
-                'ENGINE': 'django_mongokit.mongodb',
+            'mongokit': {
+                'ENGINE': 'django_mongokit.mongokit',
                 'NAME': 'example',
             },
         }
 
-Note that `default` and `mongodb` are mandatory keys in this settings.
-What you can change is the `NAME` part under `DATABASES['mongodb']`.
+Note that `default` and `mongokit` are mandatory keys in this settings.
+What you can change is the `NAME` part under `DATABASES['mongokit']`.
 
 In Django, you might be used to doing something like this:
 
